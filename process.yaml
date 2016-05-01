@@ -1,0 +1,12 @@
+output: 2016-04-28-05
+
+compfunc:
+      type: C&B
+      aqn: 0.002
+      loss: 0.001
+      mort: 0.001
+      devtime: 0 
+
+swimfunc:
+      type: negExp
+      dmax: 1000
