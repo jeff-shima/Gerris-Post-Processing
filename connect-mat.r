@@ -162,4 +162,11 @@ for (cl in cloudnames) {
 # plot competency
 lapply(regionames, function(cl){
   # get competency given parameters
-  this_comp_par <- ctrl$Regions[[which(!is.na(sapply(regionames,grep,cl)>0))]]
+  ix <- grep(cl,names(CM))
+  CM.reg <- do.call('+',CM[ix])
+  
+  mkdirs(paste0('outputs/',parm$output,'/',cl))
+  save(CM.reg,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.Rdata'))
+  write.csv(CM.reg,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.csv'))
+  
+})
