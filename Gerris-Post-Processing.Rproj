@@ -12,4 +12,5 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: XeLaTeX
 
-BuildType: Makefile
+BuildType: Custom
+CustomScriptPath: run.sh
