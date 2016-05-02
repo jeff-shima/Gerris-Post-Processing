@@ -1,1 +1,1 @@
-Rscript connect-mat.r
+Rscript r_reqs.r && Rscript connect-mat.r

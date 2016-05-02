@@ -1,4 +1,5 @@
-output: 2016-04-28-05
+output: 2016-05-01-19
+tag: dummy-try
 
 compfunc:
       type: C&B
@@ -10,3 +11,4 @@ compfunc:
 swimfunc:
       type: negExp
       dmax: 1000
+      maxPlotDist: 3000

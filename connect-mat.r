@@ -3,6 +3,7 @@ require(data.table)
 require(yaml)
 require(viridis)
 require(R.utils)
+require(ggplot2)
 source('settlefunc.r')
 
 options(warn=-1)
@@ -37,11 +38,11 @@ gunzip(paste0('outputs/',parm$output,'-outputs.tar.gz'), remove =F, overwrite=T)
 untar(paste0('outputs/',parm$output,'-outputs.tar'), exdir = 'tempdir',)
 
 # copy gerris control file
-mkdirs(paste0('outputs/',parm$output,'/'))
-file.copy('tempdir/run/output/Cook.yaml',paste0('outputs/',parm$output,'/'))
+mkdirs(file.path('outputs',parm$output,parm$tag))
+file.copy('outputs/Cook.yaml',file.path('outputs',parm$output,parm$tag))
 
 # load gerris control config
-ctrl <- yaml.load_file(paste0('outputs/',parm$output,'/Cook.yaml'))
+ctrl <- yaml.load_file(file.path('outputs',parm$output,parm$tag,'Cook.yaml'))
               
 # build particle files table             
 files <- dir('tempdir/run/output/')
@@ -73,8 +74,8 @@ lapply(regionames, function(cl){
     tmax = this_comp_par$start+this_comp_par$duration
   )
   
- mkdirs(paste0('outputs/',parm$output,'/',cl))
- pdf(paste0('outputs/',parm$output,'/',cl,'/Competency.pdf'))
+ mkdirs(file.path('outputs',parm$output,parm$tag,cl))
+ pdf(file.path('outputs',parm$output,parm$tag,cl,'Competency.pdf'))
  plot(x= seq(this_comp_par$start,
           this_comp_par$start+this_comp_par$duration,
           this_comp_par$outputInterval)/3600,
@@ -87,15 +88,13 @@ lapply(regionames, function(cl){
   sprob <- sfunc(dists = 1:swim_pars$maxPlotDist,
                  pars = swim_pars)
   
-  pdf(paste0('outputs/',parm$output,'/',cl,'/Swimming.pdf'))
+  pdf(file.path('outputs',parm$output,parm$tag,cl,'Swimming.pdf'))
   plot(x= 1:swim_pars$maxPlotDist,
        y= sprob, 
        xlab = 'Distance (m)',
        ylab = 'Settlement probability',
        type='line')
   dev.off()
-  
-  CM
   
 })
 
@@ -116,7 +115,7 @@ for (cl in cloudnames) {
           tmax = this_comp_par$start+this_comp_par$duration
           )
     
-    mkdirs(paste0('outputs/',parm$output,'/',cl))
+    mkdirs(file.path('outputs',parm$output,parm$tag,cl))
     
     # read files
     clouds <- lapply(files, fread, skip=0, select=1:4, 
@@ -145,28 +144,42 @@ for (cl in cloudnames) {
       frac <- frac*(1-rowSums(tprob))
     }    
     
-    png(paste0('outputs/',parm$output,'/',cl,'/Connectivity.png'))
-    image(CM[[cl]], col = vircols,
-          xlab = 'Destination sites', 
-          ylab='Origin sites',
-          tick=F)
-    dev.off()
+    
+    ggplot(melt(CM[[cl]]), aes(x=Var1,y=Var2,z=value)) + 
+      geom_tile(aes(fill=value)) + 
+      theme_minimal()+
+      xlab('Destination sites') +
+      ylab('Origin sites') +
+      scale_fill_viridis('Proportion settled', expand=c(0,0)) + 
+      theme(axis.ticks=element_blank(),
+            axis.text=element_blank())
+    ggsave(file.path('outputs',parm$output,parm$tag,cl,'Connectivity.png'))
     
     this.CM <- CM[[cl]]
-    save(this.CM,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.Rdata'))
-    write.csv(this.CM,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.csv'))
+    save(this.CM,file=file.path('outputs',parm$output,parm$tag,cl,'Connectivity.Rdata'))
+    write.csv(this.CM,file=file.path('outputs',parm$output,parm$tag,cl,'Connectivity.csv'))
     
     }
 
 
-# plot competency
+# aggregate connectivity over releases
 lapply(regionames, function(cl){
-  # get competency given parameters
+
   ix <- grep(cl,names(CM))
   CM.reg <- do.call('+',CM[ix])
   
-  mkdirs(paste0('outputs/',parm$output,'/',cl))
-  save(CM.reg,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.Rdata'))
-  write.csv(CM.reg,file=paste0('outputs/',parm$output,'/',cl,'/Connectivity.csv'))
+  ggplot(melt(CM.reg), aes(x=Var1,y=Var2,z=value)) + 
+    geom_tile(aes(fill=value)) + 
+    theme_minimal()+
+    xlab('Destination sites') +
+    ylab('Origin sites') +
+    scale_fill_viridis('Proportion settled', expand=c(0,0)) + 
+    theme(axis.ticks=element_blank(),
+          axis.text=element_blank())
+  ggsave(file.path('outputs',parm$output,parm$tag,cl,'Connectivity.png'))
+  
+  mkdirs(file.path('outputs',parm$output,parm$tag,cl))
+  save(CM.reg,file=file.path('outputs',parm$output,parm$tag,cl,'/Connectivity.Rdata'))
+  write.csv(CM.reg,file=file.path('outputs',parm$output,parm$tag,cl,'/Connectivity.csv'))
   
 })
