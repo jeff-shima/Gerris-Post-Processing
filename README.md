@@ -1,6 +1,13 @@
 # Gerris-Post-Processing
 Post processing for Gerris runs
 
+## Set up from github
+### In RStudio
+Go to the project menu (upper right corner). Select new project -> from version control -> from github -> insert proejct https URL from the github page: ```https://github.com/jeff-shima/Gerris-Post-Processing.git```
+
+### Outside of Rstudio
+Go to the directory to which you want to clone the project, then ```git clone https://github.com/jeff-shima/Gerris-Post-Processing.git```
+
 ## Set up in RStudio
 NOTE: this should npot be necessary since the setup is written in the .Rproj config file.
 
@@ -12,7 +19,7 @@ Use the .yaml file to set the parameters of the competency and swimming function
 
 ## Running the post-processing
 
-Go to the build tab, and click ```build all```.
+Go to the build tab, and click ```build all```, or ```Ctrl + Shift + B```.
 
 ## Outputs
 
