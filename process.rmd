@@ -1,0 +1,54 @@
+---
+title: "process.yaml  setup"
+author: "Philipp Neubauer"
+date: "2 May 2016"
+output: html_document
+---
+
+# General setup
+
+The setup assumes that a particular simulation run is associate with a date tag. The ```output``` parameter specifies the date tag to be post processed. E.g.,
+
+```
+output: 2016-05-01-19
+```
+
+Note that for the post-processing, you need to download the model runs from [Gorbachev](https://gorbachev.io/#/report/Gerris-in-the-cloud). Copy the archive and Cook.yaml to the outputs/ folder of the current project. No need to unzip etc, this will be done automatically within the build.
+
+For each model output (i.e., simulation run), you can run multiple post-processing scenarios with different tags (e.g., tags for models with different moralities or competencies). E.g., 
+
+```
+tag: low_mortality
+```
+
+# Biological model setup
+
+## compfunc: The competency function
+
+The competency function specifies the proportion of larvae that are alive and competent at any moment in time. The main parameter is ```type```. Different competency functions may have different parameters -  for example the Conolly & Baird (Ecology, 91(12), 2010, pp. 3572–3583) function ```C\&B``` has four parameters:
+
+```
+compfunc:
+      type: C&B
+      aqn: 0.002 
+      loss: 0.001
+      mort: 0.001
+      devtime: 0 
+
+```
+
+where ```aqn``` is the competency acquisition rate, ```loss``` is the competency loss rate, ```mort``` is the mortality, and ```devtime``` is a lag time (in hours) before competency acquisition starts. See Conolly & Baird 2010 Eq 2.
+
+Other functions can be implemented in ```settlefunc.r```, by extending the ```switch``` statement. The general syntax needs to be: ```competency_function(pars, ...)```, where ```pars``` are specified in the .yaml file and ```...``` are optional arguments. 
+
+## swimfunc: The swimming function
+
+The setup here is identical to the competency function, and other swimming behaviors could be implemented. Currently, only a negative-exponential function is implemented, with parameter ```dmax```, which scales the swimming ability, and ```maxPlotDist``` to indicate the maximum swimming distance to plot.
+
+```
+swimfunc:
+      type: negExp
+      dmax: 1000
+      maxPlotDist: 3000
+      
+```

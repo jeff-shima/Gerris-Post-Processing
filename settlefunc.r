@@ -1,11 +1,11 @@
 #' this is a closure - it will return a function based on the selected type of competency function.
 #'
 #' @param type the type of function to use for compentency.
-#' C\&B: Connoly & Baird 2004 (Ecology)
+#' C\&B: Connoly & Baird 2010 (Ecology)
 #'       devtime: lag time before aquisition of compentency
-#'       aqn: competency aquisition rate (per hour)
-#'       loss: competency loss rate (per hour)
-#'       mort: mortality rate (per hour)
+#'       aqn: competency aquisition rate
+#'       loss: competency loss rate
+#'       mort: mortality rate
 #'       
 #' Uniform settlement: settlement probability =1 within competancy window
 #'      cmin: lag time before aquisition of compentency
