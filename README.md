@@ -18,11 +18,11 @@ In the ```Tools``` menu, go to ```Project Options```, then ```Build tools```. Se
 
 Download the model runs from [Gorbachev](https://gorbachev.io/#/report/Gerris-in-the-cloud). Copy the archive and Cook.yaml to the outputs/ folder of the current project. No need to unzip etc, this will be done automatically within the build.
 
-Use the .yaml file to set the parameters of the competency and swimming functions, and to define the outputs to be processed.
+Use the process.yaml file to set the parameters of the competency and swimming functions, and to define the outputs to be processed. The .yaml parameters are documented in process.html.
 
 ## Running the post-processing
 
-Go to the build tab, and click ```build all```, or ```Ctrl + Shift + B```.
+Go to the build tab, and click ```build all```, or use the hotkey ```Ctrl + Shift + B```.
 
 ## Outputs
 
